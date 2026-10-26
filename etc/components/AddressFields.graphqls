@@ -1,0 +1,30 @@
+# The fields of an address form (Model\AddressFields), shared by the checkout, the address book and registration
+
+enum AddressFieldType {
+  TEXT @label(text: "text")
+  TEL @label(text: "tel")
+  COUNTRY @label(text: "country")
+  REGION @label(text: "region")
+  STREET @label(text: "street")
+}
+
+enum AddressFieldWidth {
+  HALF @label(text: "half")
+  FULL @label(text: "full")
+}
+
+type AddressField {
+  name: String!
+  label: String!
+  type: AddressFieldType!
+  required: Boolean!
+  width: AddressFieldWidth!
+  "Merchant-created attribute: the web API takes it under custom_attributes"
+  custom_attribute: Boolean!
+  "Length limits of the attribute's validate rules, the ones the server checks against"
+  min_length: Int @optional
+  max_length: Int @optional
+  "Input validation of the attribute's rules: alphanumeric, alphanum-with-spaces, numeric, alpha, email or url"
+  input_validation: String @optional
+  lines: Float! @optional
+}

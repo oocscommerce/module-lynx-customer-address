@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<!-- Every address attribute in one list: drag a row to move the field on the address book, registration and checkout -->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">lynxaddress_fields_form.fields_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Customer Address Fields</item>
+        <!-- Single fieldset: the default template expects tab "areas" and renders nothing without them. -->
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save" class="OOCS\LynxCustomerAddress\Block\Adminhtml\Fields\SaveButton"/>
+        </buttons>
+        <namespace>lynxaddress_fields_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>lynxaddress_fields_form.fields_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="fields_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="*/*/save"/>
+        </settings>
+        <dataProvider name="fields_form_data_source" class="OOCS\LynxCustomerAddress\Ui\DataProvider\FieldsDataProvider">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>attribute_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general">
+        <settings>
+            <label/>
+        </settings>
+        <dynamicRows name="rows">
+            <settings>
+                <label translate="true">Drag a row to move the field. The checkout shows the fields of Customer Address Registration.</label>
+                <addButton>false</addButton>
+                <dndConfig>
+                    <param name="enabled" xsi:type="boolean">true</param>
+                </dndConfig>
+                <componentType>dynamicRows</componentType>
+                <additionalClasses>
+                    <class name="admin__field-wide">true</class>
+                </additionalClasses>
+            </settings>
+            <container name="record" component="Magento_Ui/js/dynamic-rows/record">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="isTemplate" xsi:type="boolean">true</item>
+                        <item name="is_collection" xsi:type="boolean">true</item>
+                        <item name="componentType" xsi:type="string">container</item>
+                        <item name="positionProvider" xsi:type="string">position</item>
+                    </item>
+                </argument>
+                <field name="attribute_code" formElement="input">
+                    <settings>
+                        <dataType>text</dataType>
+                        <visible>false</visible>
+                    </settings>
+                </field>
+                <field name="position" formElement="input">
+                    <settings>
+                        <dataType>number</dataType>
+                        <visible>false</visible>
+                    </settings>
+                </field>
+                <field name="label" formElement="input" sortOrder="10">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Field</label>
+                        <elementTmpl>ui/dynamic-rows/cells/text</elementTmpl>
+                    </settings>
+                </field>
+                <field name="width" formElement="select" sortOrder="20">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Width</label>
+                    </settings>
+                    <formElements>
+                        <select>
+                            <settings>
+                                <options>
+                                    <option name="half" xsi:type="array">
+                                        <item name="value" xsi:type="string">half</item>
+                                        <item name="label" xsi:type="string" translate="true">Half</item>
+                                    </option>
+                                    <option name="full" xsi:type="array">
+                                        <item name="value" xsi:type="string">full</item>
+                                        <item name="label" xsi:type="string" translate="true">Full</item>
+                                    </option>
+                                </options>
+                            </settings>
+                        </select>
+                    </formElements>
+                </field>
+                <field name="is_required" formElement="checkbox" sortOrder="30">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <!-- Observable, so the cell redraws when the row's flag arrives -->
+                            <item name="tracks" xsi:type="array">
+                                <item name="locked" xsi:type="boolean">true</item>
+                            </item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <dataType>boolean</dataType>
+                        <label translate="true">Required</label>
+                        <!-- First and last name, street, city and country: core's address validators always ask for them,
+                             so their row shows the value instead of an input (FieldSettings::getAlwaysRequired) -->
+                        <elementTmpl>OOCS_LynxCustomerAddress/form/element/locked-switcher</elementTmpl>
+                        <imports>
+                            <link name="locked">${ $.provider }:${ $.parentScope }.locked</link>
+                        </imports>
+                    </settings>
+                    <formElements>
+                        <checkbox>
+                            <settings>
+                                <valueMap>
+                                    <map name="false" xsi:type="number">0</map>
+                                    <map name="true" xsi:type="number">1</map>
+                                </valueMap>
+                                <prefer>toggle</prefer>
+                            </settings>
+                        </checkbox>
+                    </formElements>
+                </field>
+                <!-- No validation rule: dynamic rows marks any column with one as required; Save casts to int -->
+                <field name="min_length" formElement="input" sortOrder="40">
+                    <settings>
+                        <dataType>number</dataType>
+                        <label translate="true">Minimum Text Length</label>
+                    </settings>
+                </field>
+                <field name="max_length" formElement="input" sortOrder="50">
+                    <settings>
+                        <dataType>number</dataType>
+                        <label translate="true">Maximum Text Length</label>
+                    </settings>
+                </field>
+                <field name="input_validation" formElement="select" sortOrder="55">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Input Validation</label>
+                    </settings>
+                    <formElements>
+                        <select>
+                            <settings>
+                                <options>
+                                    <option name="none" xsi:type="array">
+                                        <item name="value" xsi:type="string"></item>
+                                        <item name="label" xsi:type="string" translate="true">None</item>
+                                    </option>
+                                    <option name="alphanumeric" xsi:type="array">
+                                        <item name="value" xsi:type="string">alphanumeric</item>
+                                        <item name="label" xsi:type="string" translate="true">Alphanumeric</item>
+                                    </option>
+                                    <option name="alphanum_with_spaces" xsi:type="array">
+                                        <item name="value" xsi:type="string">alphanum-with-spaces</item>
+                                        <item name="label" xsi:type="string" translate="true">Alphanumeric with Spaces</item>
+                                    </option>
+                                    <option name="numeric" xsi:type="array">
+                                        <item name="value" xsi:type="string">numeric</item>
+                                        <item name="label" xsi:type="string" translate="true">Numeric Only</item>
+                                    </option>
+                                    <option name="alpha" xsi:type="array">
+                                        <item name="value" xsi:type="string">alpha</item>
+                                        <item name="label" xsi:type="string" translate="true">Alpha Only</item>
+                                    </option>
+                                    <option name="email" xsi:type="array">
+                                        <item name="value" xsi:type="string">email</item>
+                                        <item name="label" xsi:type="string" translate="true">Email</item>
+                                    </option>
+                                    <option name="url" xsi:type="array">
+                                        <item name="value" xsi:type="string">url</item>
+                                        <item name="label" xsi:type="string" translate="true">URL</item>
+                                    </option>
+                                </options>
+                            </settings>
+                        </select>
+                    </formElements>
+                </field>
+                <field name="forms" formElement="multiselect" sortOrder="60">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <!-- Observable, so the cell redraws when the row's flag arrives -->
+                            <item name="tracks" xsi:type="array">
+                                <item name="locked" xsi:type="boolean">true</item>
+                            </item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Forms</label>
+                        <!-- The same fields stay on every storefront form -->
+                        <elementTmpl>OOCS_LynxCustomerAddress/form/element/locked-multiselect</elementTmpl>
+                        <imports>
+                            <link name="locked">${ $.provider }:${ $.parentScope }.locked</link>
+                        </imports>
+                    </settings>
+                    <formElements>
+                        <multiselect>
+                            <settings>
+                                <options>
+                                    <option name="address_book" xsi:type="array">
+                                        <item name="value" xsi:type="string">customer_address_edit</item>
+                                        <item name="label" xsi:type="string" translate="true">Customer Account Address</item>
+                                    </option>
+                                    <option name="register" xsi:type="array">
+                                        <item name="value" xsi:type="string">customer_register_address</item>
+                                        <item name="label" xsi:type="string" translate="true">Customer Address Registration</item>
+                                    </option>
+                                </options>
+                            </settings>
+                        </multiselect>
+                    </formElements>
+                </field>
+            </container>
+        </dynamicRows>
+    </fieldset>
+</form>

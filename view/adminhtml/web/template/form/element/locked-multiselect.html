@@ -1,0 +1,14 @@
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<!-- A locked row lists the picked options' labels instead of the multiselect -->
+<!-- ko if: $data.locked -->
+<span class="admin__field-value"
+      text="options().filter(option => (value() || []).includes(option.value)).map(option => option.label).join(', ')"></span>
+<!-- /ko -->
+<!-- ko ifnot: $data.locked -->
+<render args="'ui/form/element/multiselect'"></render>
+<!-- /ko -->

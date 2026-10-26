@@ -1,0 +1,13 @@
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<!-- A locked row is always required: the word, not a toggle -->
+<!-- ko if: $data.locked -->
+<span class="admin__field-value" translate="'Yes'"></span>
+<!-- /ko -->
+<!-- ko ifnot: $data.locked -->
+<render args="'ui/form/components/single/switcher'"></render>
+<!-- /ko -->

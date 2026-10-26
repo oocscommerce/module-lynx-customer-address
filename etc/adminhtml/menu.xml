@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="OOCS_LynxCustomerAddress::fields"
+             title="Customer Address Fields"
+             translate="title"
+             module="OOCS_LynxCustomerAddress"
+             parent="Magento_Backend::stores_attributes"
+             sortOrder="40"
+             action="lynxaddress/fields/index"
+             resource="OOCS_LynxCustomerAddress::fields"/>
+    </menu>
+</config>
